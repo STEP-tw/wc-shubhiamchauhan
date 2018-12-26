@@ -1,17 +1,17 @@
-const getLineCount = function(contents) {
+const getLineCount = function (contents) {
     return contents.split('\n').length - 1;
 }
 
-const getEachLineWordCount = function(count, line) {
+const getEachLineWordCount = function (count, line) {
     return count + line.split(' ').filter(word => word != "").length;
 }
 
-const getWordCount = function(contents) {
+const getWordCount = function (contents) {
     const lines = contents.trim().split('\n');
     return lines.reduce(getEachLineWordCount, 0);
 }
 
-const getByteCount = function(contents){
+const getByteCount = function (contents) {
     return contents.length;
 }
 
@@ -36,4 +36,9 @@ const contentCount = function (file, fs) {
     return formatOutput({ lineCount, wordCount, byteCount }, file);
 }
 
-module.exports = { contentCount };
+module.exports = {
+    contentCount,
+    getLineCount,
+    getWordCount,
+    getByteCount
+};
