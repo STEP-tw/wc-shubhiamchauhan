@@ -15,25 +15,31 @@ const getByteCount = function (contents) {
     return contents.length;
 }
 
-
+const justify = (count) => {
+    const numOfSpaces = 8 - ("" + count).length;
+    const spaces = new Array(numOfSpaces).fill(" ").join('');
+    return spaces + count;
+}
 const formatOutput = function (counts, file) {
-    const { lineCount, wordCount, byteCount } = counts;
-    const noOfLineCountSpaces = 8 - ("" + lineCount).length;
-    const noOfWordCountSpaces = 8 - ("" + wordCount).length;
-    const noOfByteCountSpaces = 8 - ("" + byteCount).length;
-    const lineCountSpaces = new Array(noOfLineCountSpaces).fill(" ").join('');
-    const wordCountSpaces = new Array(noOfWordCountSpaces).fill(" ").join('');
-    const byteCountSpaces = new Array(noOfByteCountSpaces).fill(" ").join('');
-    let result = lineCountSpaces + lineCount + wordCountSpaces + wordCount;
-    return result + byteCountSpaces + byteCount + " " + file;
+    const justifiedCounts = counts.map(count => justify(count));
+    return justifiedCounts.join('') + " " + file;
 }
 
-const contentCount = function (file, fs) {
-    const fileContents = fs.readFileSync(file, "utf8");
-    const lineCount = getLineCount(fileContents);
-    const wordCount = getWordCount(fileContents);
-    const byteCount = getByteCount(fileContents);
-    return formatOutput({ lineCount, wordCount, byteCount }, file);
+const getContentCounts = function(options, fs, file){
+    const contents = fs.readFileSync(file, "utf8"); 
+    const counter = {
+        lineCount: getLineCount,
+        wordCount: getWordCount,
+        byteCount: getByteCount
+    }
+    const counts = options.map(type => counter[type](contents));
+    return formatOutput(counts, file);
+}
+
+const contentCount = function (args, fs) {
+    const { options, files } = args;
+    const getAllCounts = getContentCounts.bind(null, options, fs);
+    return files.map(file => getAllCounts(file)).join('\n');
 }
 
 module.exports = {
