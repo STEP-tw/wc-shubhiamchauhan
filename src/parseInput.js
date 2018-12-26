@@ -13,8 +13,12 @@ const optionError = function (option) {
 }
 
 const getError = function (options) {
-    const message = options.some(option => !Object.keys(wholeOptions).includes(option));
-    const wrongOption = options.filter(option => !Object.keys(wholeOptions).includes(option))[0];
+    const message = options.some(option =>
+        !Object.keys(wholeOptions).includes(option)
+    );
+    const wrongOption = options.filter(option =>
+        !Object.keys(wholeOptions).includes(option)
+    ).shift();
     return { message, wrongOption };
 }
 
@@ -30,7 +34,7 @@ const parse = function (args) {
         options = options.concat(option);
         index++;
     }
-    if(options.length == 0) options = ["l", "w", "c"];
+    if (options.length == 0) options = ["l", "w", "c"];
     return { options: organizeOptions(options), files: args.slice(index) };
 }
 

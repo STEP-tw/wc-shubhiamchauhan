@@ -21,16 +21,16 @@ describe("contentCount", () => {
         fs.readFileSync = mockReader(files);
     })
     it('should return number of lines, words and chars with filename', () => {
-        let args = { options:["lineCount", "wordCount", "byteCount"], files:["alphabets"] }
+        let args = { options: ["lineCount", "wordCount", "byteCount"], files: ["alphabets"] }
         let expectedOutput = new Array(7).fill(" ").join('') + 4;
         expectedOutput += new Array(7).fill(" ").join('') + 5;
         expectedOutput += new Array(7).fill(" ").join('') + 9;
         expectedOutput += " " + "alphabets";
         assert.equal(contentCount(args, fs), expectedOutput);
     })
-    
+
     it('should return every content count 0 and filename for empty file', () => {
-        let args = { options:["lineCount", "wordCount", "byteCount"], files:["empty"] }
+        let args = { options: ["lineCount", "wordCount", "byteCount"], files: ["empty"] }
         let expectedOutput = new Array(7).fill(" ").join('') + 0;
         expectedOutput += new Array(7).fill(" ").join('') + 0;
         expectedOutput += new Array(7).fill(" ").join('') + 0;

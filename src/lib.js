@@ -25,8 +25,8 @@ const formatOutput = function (counts, file) {
     return justifiedCounts.join('') + " " + file;
 }
 
-const getContentCounts = function(options, fs, file){
-    const contents = fs.readFileSync(file, "utf8"); 
+const getContentCounts = function (options, fs, file) {
+    const contents = fs.readFileSync(file, "utf8");
     const counter = {
         lineCount: getLineCount,
         wordCount: getWordCount,
