@@ -1,25 +1,20 @@
-class Contents {
-    constructor(contents) {
-        this.contents = contents;
-    }
-
-    getLineCount() {
-        return this.contents.split('\n').length - 1;
-    }
-
-    getEachLineWordCount (count, line) {
-        return count + line.split(' ').filter(word => word != "").length
-    }
-
-    getWordCount() {
-        const lines = this.contents.trim().split('\n');
-        return lines.reduce(this.getEachLineWordCount, 0);
-    }
-
-    getByteCount() {
-        return this.contents.length;
-    }
+const getLineCount = function(contents) {
+    return contents.split('\n').length - 1;
 }
+
+const getEachLineWordCount = function(count, line) {
+    return count + line.split(' ').filter(word => word != "").length;
+}
+
+const getWordCount = function(contents) {
+    const lines = contents.trim().split('\n');
+    return lines.reduce(getEachLineWordCount, 0);
+}
+
+const getByteCount = function(contents){
+    return contents.length;
+}
+
 
 const formatOutput = function (counts, file) {
     const { lineCount, wordCount, byteCount } = counts;
@@ -34,11 +29,10 @@ const formatOutput = function (counts, file) {
 }
 
 const contentCount = function (file, fs) {
-    const fileContents = fs.readFileSync(file, "utf8")
-    const contents = new Contents(fileContents, fs);
-    const lineCount = contents.getLineCount();
-    const wordCount = contents.getWordCount();
-    const byteCount = contents.getByteCount();
+    const fileContents = fs.readFileSync(file, "utf8");
+    const lineCount = getLineCount(fileContents);
+    const wordCount = getWordCount(fileContents);
+    const byteCount = getByteCount(fileContents);
     return formatOutput({ lineCount, wordCount, byteCount }, file);
 }
 
