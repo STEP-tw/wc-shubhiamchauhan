@@ -1,0 +1,26 @@
+{
+  "name": "wc.js",
+  "version": "0.0.1",
+  "description": "",
+  "main": "wc.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/STEP-tw/wc-shubhiamchauhan.git"
+  },
+  "author": "Shubham Chauhan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/STEP-tw/wc-shubhiamchauhan/issues"
+  },
+  "homepage": "https://github.com/STEP-tw/wc-shubhiamchauhan#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "^5.2.0"
+  }
+}
