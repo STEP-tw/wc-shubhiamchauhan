@@ -14,27 +14,42 @@ const mockReader = function (expectedFiles) {
 describe("contentCount", () => {
     let files = {};
     let fs = {};
+    let getSpaces;
     beforeEach(() => {
         files.alphabets = "a\nb\nc\nd\ne";
-        files.numbers = "1\nb\nc\nd\ne";
+        files.numbers = "1\n2\n3\n4\n5";
         files.empty = "";
         fs.readFileSync = mockReader(files);
+        getSpaces = length => new Array(length).fill(" ").join('');
     })
     it('should return number of lines, words and chars with filename', () => {
         let args = { options: ["lineCount", "wordCount", "byteCount"], files: ["alphabets"] }
-        let expectedOutput = new Array(7).fill(" ").join('') + 4;
-        expectedOutput += new Array(7).fill(" ").join('') + 5;
-        expectedOutput += new Array(7).fill(" ").join('') + 9;
+        let expectedOutput = getSpaces(7) + 4;
+        expectedOutput += getSpaces(7) + 5;
+        expectedOutput += getSpaces(7) + 9;
         expectedOutput += " " + "alphabets";
         assert.equal(contentCount(args, fs), expectedOutput);
     })
 
     it('should return every content count 0 and filename for empty file', () => {
         let args = { options: ["lineCount", "wordCount", "byteCount"], files: ["empty"] }
-        let expectedOutput = new Array(7).fill(" ").join('') + 0;
-        expectedOutput += new Array(7).fill(" ").join('') + 0;
-        expectedOutput += new Array(7).fill(" ").join('') + 0;
+        let expectedOutput = getSpaces(7) + 0;
+        expectedOutput += getSpaces(7) + 0;
+        expectedOutput += getSpaces(7) + 0;
         expectedOutput += " " + "empty";
+        assert.equal(contentCount(args, fs), expectedOutput);
+    })
+
+    it('should return number of lines, words and chars with filename for every file', () => {
+        let args = { options: ["lineCount", "wordCount", "byteCount"], files: ["alphabets", "numbers"] }
+        let expectedOutput = getSpaces(7) + 4;
+        expectedOutput += getSpaces(7) + 5;
+        expectedOutput += getSpaces(7) + 9;
+        expectedOutput += " " + "alphabets" + "\n" + expectedOutput + " " + "numbers";
+        expectedOutput += "\n" + getSpaces(7) + 8;
+        expectedOutput += getSpaces(6) + 10;
+        expectedOutput += getSpaces(6) + 18;
+        expectedOutput += " " + "total";
         assert.equal(contentCount(args, fs), expectedOutput);
     })
 })
