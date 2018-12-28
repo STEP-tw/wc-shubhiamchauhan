@@ -3,8 +3,8 @@ const { contentCount } = require('./src/lib.js');
 const { parse } = require('./src/parseInput.js');
 
 const main = function () {
-  let userArgs = process.argv.slice(2);
-  let args = parse(userArgs);
+  const userArgs = process.argv.slice(2);
+  const args = parse(userArgs);
   if (args["hasError"]) {
     console.log(args["message"]);
     return;
