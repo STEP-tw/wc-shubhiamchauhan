@@ -1,4 +1,4 @@
-const { getError } = require('./error.js');
+const { getError } = require('./errorLib.js');
 
 const wholeOptions = { "l": "lineCount", "w": "wordCount", "c": "byteCount" };
 
