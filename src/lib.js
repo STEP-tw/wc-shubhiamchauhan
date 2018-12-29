@@ -31,6 +31,7 @@ const justify = (count) => {
     const spaces = new Array(numOfSpaces).fill(SPACE).join('');
     return spaces + count;
 }
+
 const formatOutput = function ({ counts, file }) {
     const justifiedCounts = counts.map(count => justify(count));
     return justifiedCounts.join('') + SPACE + file;
