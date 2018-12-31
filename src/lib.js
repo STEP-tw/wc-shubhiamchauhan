@@ -38,6 +38,9 @@ const formatOutput = function ({ counts, file }) {
 }
 
 const getContentCounts = function (options, fs, file) {
+    if (!fs.existsSync(file)) {
+        return { isNotExists: true, message: getErrorMessage(file) };
+    }
     const contents = fs.readFileSync(file, "utf8");
     const counter = {
         lineCount: getLineCount,
@@ -48,29 +51,35 @@ const getContentCounts = function (options, fs, file) {
     return { counts, file };
 }
 
-const multipleFileFormatter = function (countsAndFilenames) {
-    const length = countsAndFilenames[0].counts.length;
+const multipleFileFormatter = function (countsAndFilenames, options) {
+    const length = options.length;
     const total = new Array(length).fill(0);
-    const totalCount = countsAndFilenames.reduce((total, { counts }) => {
-        return addSameIndexValues(total, counts);
+    const totalCount = countsAndFilenames.reduce((total, countsAndFilename) => {
+        if (countsAndFilename.isNotExists) return total;
+        return addSameIndexValues(total, countsAndFilename.counts);
     }, total);
     const totalContents = { counts: totalCount, file: "total" };
-    return countsAndFilenames.concat(totalContents).map(countsAndfile =>
-        formatOutput(countsAndfile)
-    );
+    return countsAndFilenames.concat(totalContents).map(countsAndFile => {
+        if (countsAndFile.isNotExists) return countsAndFile.message;
+        return formatOutput(countsAndFile);
+    });
 }
 
-const singleFileFormatter = function (countsAndFilenames) {
-    return countsAndFilenames.map(data => formatOutput(data));
+const getErrorMessage = function (file) {
+    return "wc: " + file + ": open: No such file or directory";
+}
+
+const singleFileFormatter = function (file, options, fs) {
+    if (!fs.existsSync(file)) return getErrorMessage(file);
+    return formatOutput(getContentCounts(options, fs, file));
 }
 
 const contentCount = function (args, fs) {
     const { options, files } = args;
-    let formatter = multipleFileFormatter;
-    if (files.length < 2) formatter = singleFileFormatter;
+    if (files.length < 2) return singleFileFormatter(files[0], options, fs);
     const getAllCounts = getContentCounts.bind(null, options, fs);
     const result = files.map(file => getAllCounts(file));
-    return formatter(result).join(NEWLINE);
+    return multipleFileFormatter(result, options).join(NEWLINE);
 }
 
 module.exports = {

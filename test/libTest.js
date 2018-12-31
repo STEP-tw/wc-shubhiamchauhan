@@ -11,6 +11,15 @@ const mockReader = function (expectedFiles) {
     };
 };
 
+const mockValidator = function (expectedFiles) {
+    return function (actualPath) {
+        if (expectedFiles[actualPath] != undefined) {
+            return true;
+        }
+        return false;
+    };
+};
+
 describe("contentCount", () => {
     let files = {};
     let fs = {};
@@ -19,6 +28,7 @@ describe("contentCount", () => {
         files.alphabets = "a\nb\nc\nd\ne";
         files.numbers = "1\n2\n3\n4\n5";
         files.empty = "";
+        fs.existsSync = mockValidator(files);
         fs.readFileSync = mockReader(files);
         getSpaces = length => new Array(length).fill(" ").join('');
     })
@@ -50,6 +60,12 @@ describe("contentCount", () => {
         expectedOutput += getSpaces(6) + 10;
         expectedOutput += getSpaces(6) + 18;
         expectedOutput += " " + "total";
+        assert.equal(contentCount(args, fs), expectedOutput);
+    })
+
+    it('should return error for non existing file', () => {
+        let args = { options: ["lineCount", "wordCount", "byteCount"], files: ["vowels"] }
+        let expectedOutput = "wc: vowels: open: No such file or directory";
         assert.equal(contentCount(args, fs), expectedOutput);
     })
 })
